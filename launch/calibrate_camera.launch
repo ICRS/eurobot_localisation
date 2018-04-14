@@ -1,0 +1,50 @@
+<launch>
+  <!-- Set this to your camera's name -->
+  <arg name="primary_cam" value="jetson_cam" />
+  <arg name="primary_cam_info" value="file:///home/nvidia/.camera_info/jetson_cam_1280x720.yaml" />
+  <arg name="secondary_cam" value="logitech_cam" />
+  <arg name="secondary_cam_info" value="file:///home/nvidia/.camera_info/logitech_cam_640x360.yaml" />
+
+  <arg name="gui" default="true"/>
+  <arg name="feed" default="true"/>
+  
+  <!-- Starting team colour -->
+  <arg name="side" default="orange"/>
+
+
+
+  <!-- Camera driver for onboard Jetson camera -->
+  <node pkg="gscam" type="gscam" name="$(arg primary_cam)_driver_node">
+    <param name="camera_name" value="$(arg primary_cam)" />
+    <param name="camera_info_url" value="$(arg primary_cam_info)" />
+    <param name="frame_id" value="primary_camera" />
+    <param name="gscam_config" value="nvcamerasrc ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)720,format=(string)I420, framerate=(fraction)20/1 ! nvvidconv flip-method=0 ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR" />
+    
+    <remap from="camera/image_raw" to="$(arg primary_cam)/image_raw" />
+    <remap from="set_camera_info" to="$(arg primary_cam)/set_camera_info" />
+  </node>
+
+  <!-- Camera driver for secondary Logitech camera -->
+  <node pkg="cv_camera" type="cv_camera_node" name="$(arg secondary_cam)_driver_node">
+      <param name="device_path" value="/dev/video1" />
+      <param name="frame_id" value="secondary_camera" />
+      <param name="image_width" value="640" />
+      <param name="image_height" value="480" />
+      <!-- <param name="camera_info_url" value="$(arg secondary_cam_info)" /> -->
+
+      <remap from="$(arg secondary_cam)_driver_node/image_raw" to="$(arg secondary_cam)/image_raw" />
+  </node>
+
+
+
+  <!-- Display raw & recitfied image feeds from camera drivers -->
+
+  <node pkg="image_view" type="image_view" name="secondary_raw_feed" >
+    <remap from="image" to="/$(arg secondary_cam)/image_raw" />       
+  </node>                                                             
+              
+
+  <node pkg="camera_calibration" type="cameracalibrator.py" name="calibrate" args="--size 8x6 --square 0.024 image:=/$(arg secondary_cam)/image_raw camera:= " output="screen"/>
+
+
+</launch>
