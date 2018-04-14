@@ -29,7 +29,7 @@ This will launch all the components required for both cameras.
 ## Published ROS topics
 
 1. `eurobot/state/visual_measurements` (tf2_msgs/TFMessage)
-2. `eurobot/enemy/relative_position' (tf2_msgs/TFMessage)
+2. `eurobot/enemy/relative_position` (tf2_msgs/TFMessage)
 
 
 
