@@ -13,7 +13,7 @@
 #include <tf2_msgs/TFMessage.h>
 
 namespace eurobot{
-namespace constants{
+namespace params{
 
     std::string colour;                         // to be set at the start of the node
     tf2::Transform T_BC;
@@ -26,56 +26,56 @@ namespace constants{
         tf2::Quaternion q;
         float ex, ey, ez; //Euler angles (radians) for easier calculation
     
-        if(!std::strcmp(eurobot::constants::colour.c_str(), "orange")){
+        if(!std::strcmp(eurobot::params::colour.c_str(), "orange")){
         // Note: z-axis of tag is coming out of the page, y-axis points to the top
             switch(id){
-                case  0:  r.setValue(-0.044, 0.040, 0.310); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-                case  1:  r.setValue(-0.044, 0.040, 0.230); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-                case  2:  r.setValue(-0.044, 0.040, 0.150); ex = 1.57; ey = 0.00; ez = 1.57; break;
-                case  3:  r.setValue(-0.084, 0.080, 0.310); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case  4:  r.setValue(-0.084, 0.080, 0.230); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case  5:  r.setValue(-0.084, 0.080, 0.150); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case  6:  r.setValue(3.084, 1.030, 0.310); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case  7:  r.setValue(3.084, 1.030, 0.230); ex = 1.57; ey = 0.00; ez = 3.14; break;
-                case  8:  r.setValue(3.084, 1.030, 0.150); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case  9:  r.setValue(3.044, 0.990, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-                case 10:  r.setValue(3.044, 0.990, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-                case 11:  r.setValue(3.044, 0.990, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-                case 12:  r.setValue(3.084, 0.950, 0.310); ex = 1.57; ey = 0.00; ez = 0.00; break;
-                case 13:  r.setValue(3.084, 0.950, 0.230); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                case 14:  r.setValue(3.084, 0.950, 0.150); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                case 15:  r.setValue(-0.084, 1.900, 0.310); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                case 16:  r.setValue(-0.084, 1.900, 0.230); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                case 17:  r.setValue(-0.084, 1.900, 0.150); ex = 1.57; ey = 0.00; ez = 0.00; break;
-                case 18:  r.setValue(-0.044, 1.940, 0.310); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-                case 19:  r.setValue(-0.044, 1.940, 0.230); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-                case 20:  r.setValue(-0.044, 1.940, 0.150); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-                default: r.setValue(0.00, 0.00, 0.00); ex = 0.00; ey = 0.00; ez = 0.00; break; 
+                case  0: r.setValue(-0.044, 0.040, 0.310); ex = 1.57; ey = 0.00; ez =  1.57; break;
+                case  1: r.setValue(-0.044, 0.040, 0.230); ex = 1.57; ey = 0.00; ez =  1.57; break;
+                case  2: r.setValue(-0.044, 0.040, 0.150); ex = 1.57; ey = 0.00; ez =  1.57; break;
+                case  3: r.setValue(-0.084, 0.080, 0.310); ex = 1.57; ey = 0.00; ez =  3.14; break;
+                case  4: r.setValue(-0.084, 0.080, 0.230); ex = 1.57; ey = 0.00; ez =  3.14; break;
+                case  5: r.setValue(-0.084, 0.080, 0.150); ex = 1.57; ey = 0.00; ez =  3.14; break;
+                case  6: r.setValue( 3.084, 1.030, 0.310); ex = 1.57; ey = 0.00; ez =  3.14; break;
+                case  7: r.setValue( 3.084, 1.030, 0.230); ex = 1.57; ey = 0.00; ez =  3.14; break;
+                case  8: r.setValue( 3.084, 1.030, 0.150); ex = 1.57; ey = 0.00; ez =  3.14; break;
+                case  9: r.setValue( 3.044, 0.990, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break;
+                case 10: r.setValue( 3.044, 0.990, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break;
+                case 11: r.setValue( 3.044, 0.990, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break;
+                case 12: r.setValue( 3.084, 0.950, 0.310); ex = 1.57; ey = 0.00; ez =  0.00; break;
+                case 13: r.setValue( 3.084, 0.950, 0.230); ex = 1.57; ey = 0.00; ez =  0.00; break;
+                case 14: r.setValue( 3.084, 0.950, 0.150); ex = 1.57; ey = 0.00; ez =  0.00; break;
+                case 15: r.setValue(-0.084, 1.900, 0.310); ex = 1.57; ey = 0.00; ez =  0.00; break;
+                case 16: r.setValue(-0.084, 1.900, 0.230); ex = 1.57; ey = 0.00; ez =  0.00; break;
+                case 17: r.setValue(-0.084, 1.900, 0.150); ex = 1.57; ey = 0.00; ez =  0.00; break;
+                case 18: r.setValue(-0.044, 1.940, 0.310); ex = 1.57; ey = 0.00; ez =  1.57; break;
+                case 19: r.setValue(-0.044, 1.940, 0.230); ex = 1.57; ey = 0.00; ez =  1.57; break;
+                case 20: r.setValue(-0.044, 1.940, 0.150); ex = 1.57; ey = 0.00; ez =  1.57; break;
+                default: r.setValue( 0.000, 0.000, 0.000); ex = 0.00; ey = 0.00; ez =  0.00; break;
             }
         } else {
             switch(id){
-                case  0:  r.setValue(3.084, 0.080, 0.310); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case  1:  r.setValue(3.084, 0.080, 0.230); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case  2:  r.setValue(3.084, 0.080, 0.150); ex = 1.57; ey = 0.00; ez = 3.14; break;
-                case  3:  r.setValue(3.044, 0.040, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-                case  4:  r.setValue(3.044, 0.040, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-                case  5:  r.setValue(3.044, 0.040, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-                case  6:  r.setValue(-0.084, 0.950, 0.310); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                case  7:  r.setValue(-0.084, 0.950, 0.230); ex = 1.57; ey = 0.00; ez = 0.00; break;
-                case  8:  r.setValue(-0.084, 0.950, 0.150); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                case  9:  r.setValue(-0.044, 0.990, 0.310); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-                case 10:  r.setValue(-0.044, 0.990, 0.230); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-                case 11:  r.setValue(-0.044, 0.990, 0.150); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-                case 12:  r.setValue(-0.084, 1.030, 0.310); ex = 1.57; ey = 0.00; ez = 3.14; break;
-                case 13:  r.setValue(-0.084, 1.030, 0.230); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case 14:  r.setValue(-0.084, 1.030, 0.150); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-                case 15:  r.setValue(3.044, 1.940, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-                case 16:  r.setValue(3.044, 1.940, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-                case 17:  r.setValue(3.044, 1.940, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break;
-                case 18:  r.setValue(3.084, 1.900, 0.310); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                case 19:  r.setValue(3.084, 1.900, 0.230); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                case 20:  r.setValue(3.084, 1.900, 0.150); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-                default: r.setValue(0.00, 0.00, 0.00); ex = 0.00; ey = 0.00; ez = 0.00; break; 
+                case  0: r.setValue( 3.084, 0.080, 0.310); ex = 1.57; ey = 0.00; ez =  3.14; break; 
+                case  1: r.setValue( 3.084, 0.080, 0.230); ex = 1.57; ey = 0.00; ez =  3.14; break; 
+                case  2: r.setValue( 3.084, 0.080, 0.150); ex = 1.57; ey = 0.00; ez =  3.14; break;
+                case  3: r.setValue( 3.044, 0.040, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break; 
+                case  4: r.setValue( 3.044, 0.040, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break; 
+                case  5: r.setValue( 3.044, 0.040, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break; 
+                case  6: r.setValue(-0.084, 0.950, 0.310); ex = 1.57; ey = 0.00; ez =  0.00; break; 
+                case  7: r.setValue(-0.084, 0.950, 0.230); ex = 1.57; ey = 0.00; ez =  0.00; break;
+                case  8: r.setValue(-0.084, 0.950, 0.150); ex = 1.57; ey = 0.00; ez =  0.00; break; 
+                case  9: r.setValue(-0.044, 0.990, 0.310); ex = 1.57; ey = 0.00; ez =  1.57; break; 
+                case 10: r.setValue(-0.044, 0.990, 0.230); ex = 1.57; ey = 0.00; ez =  1.57; break; 
+                case 11: r.setValue(-0.044, 0.990, 0.150); ex = 1.57; ey = 0.00; ez =  1.57; break; 
+                case 12: r.setValue(-0.084, 1.030, 0.310); ex = 1.57; ey = 0.00; ez =  3.14; break;
+                case 13: r.setValue(-0.084, 1.030, 0.230); ex = 1.57; ey = 0.00; ez =  3.14; break; 
+                case 14: r.setValue(-0.084, 1.030, 0.150); ex = 1.57; ey = 0.00; ez =  3.14; break; 
+                case 15: r.setValue( 3.044, 1.940, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break; 
+                case 16: r.setValue( 3.044, 1.940, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break; 
+                case 17: r.setValue( 3.044, 1.940, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break;
+                case 18: r.setValue( 3.084, 1.900, 0.310); ex = 1.57; ey = 0.00; ez =  0.00; break; 
+                case 19: r.setValue( 3.084, 1.900, 0.230); ex = 1.57; ey = 0.00; ez =  0.00; break; 
+                case 20: r.setValue( 3.084, 1.900, 0.150); ex = 1.57; ey = 0.00; ez =  0.00; break; 
+                default: r.setValue( 0.000, 0.000, 0.000); ex = 0.00; ey = 0.00; ez =  0.00; break; 
             }
         }
         
@@ -103,7 +103,7 @@ namespace constants{
         return tf2::Transform(q,r).inverse(); // invert T_ET to give T_TE
     }
 
-} //constants
+} //params
 } //eurobot
 
 
@@ -146,19 +146,19 @@ public:
                 // if beacon tag detected
                 // Calculate T_WB = T_WT * T_TC * T_CB
                 tf2::Transform T_TC = T_CT.inverse();
-                tf2::Transform T_WT = eurobot::constants::lookupTagTransform(id);
-                T_res = T_WT * T_TC * eurobot::constants::T_CB;
+                tf2::Transform T_WT = eurobot::params::lookupTagTransform(id);
+                T_res = T_WT * T_TC * eurobot::params::T_CB;
             
                 // set the proper links for the result
                 temp.header.frame_id = "world";
                 temp.child_frame_id = "base_tag" + std::to_string(id) + "(" + cam_name + ")";
             } else if(id > 20 && id < 25) {
                 // if enemy tag detected
-                tf2::Transform T_TE = eurobot::constants::lookupEnemyTransform(id);
+                tf2::Transform T_TE = eurobot::params::lookupEnemyTransform(id);
 
                 // calculate T_BE, enemy base relative to our robot
                 // T_BE = T_BC * T_CT * T_TE
-                T_res = eurobot::constants::T_BC * T_CT * T_TE;
+                T_res = eurobot::params::T_BC * T_CT * T_TE;
 
                 // set proper links
                 temp.header.frame_id = "base"; 
@@ -204,8 +204,8 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "localisation_node");
     ros::NodeHandle nh;
 
-    if(!nh.getParam("localisation_node/colour", eurobot::constants::colour)){
-        eurobot::constants::colour = "green";
+    if(!nh.getParam("localisation_node/colour", eurobot::params::colour)){
+        eurobot::params::colour = "green";
     }
 
     std::string cam_name;
@@ -221,8 +221,8 @@ int main(int argc, char** argv){
     tf2::Vector3 r(rx, ry, rz);
     tf2::Quaternion q;
     q.setRPY(ex, ey, ez);
-    eurobot::constants::T_BC = tf2::Transform(q, r);
-    eurobot::constants::T_CB = eurobot::constants::T_BC.inverse();
+    eurobot::params::T_BC = tf2::Transform(q, r);
+    eurobot::params::T_CB = eurobot::params::T_BC.inverse();
 
 
 
