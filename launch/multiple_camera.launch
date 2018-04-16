@@ -100,9 +100,9 @@
     <param name="colour" type="str"    value="$(arg side)" />
 
     <!-- values for camera pose relative to robot base -->
-    <param name="rx"     type="double" value="0.05" />
-    <param name="ry"     type="double" value="0.00" />
-    <param name="rz"     type="double" value="0.15" />
+    <param name="rx"     type="double" value="0.075" />
+    <param name="ry"     type="double" value="-0.015" />
+    <param name="rz"     type="double" value="0.175" />
     
     <param name="roll"   type="double" value="-1.57" />
     <param name="pitch"  type="double" value="0.00" />
@@ -126,7 +126,7 @@
 
 
   <!-- Display on Rviz for testing purposes -->
-  <node if="$(arg gui)" pkg="eurobot_localisation" type="eurobot_tf_broadcaster_node" name="eurobot_arena_tf_generator" >
+  <node pkg="eurobot_localisation" type="eurobot_tf_broadcaster_node" name="eurobot_arena_tf_generator" >
     <param name="colour" type="str" value="$(arg side)" />
   </node>
 

@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <cstdlib>
 #include <cstdio>
@@ -10,7 +11,7 @@
 #include <tf2/LinearMath/Transform.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/transform_datatypes.h>
-
+#include <geometry_msgs/TransformStamped.h>
 
 static std::string colour;
 
@@ -39,6 +40,14 @@ static std::map<std::string, int> init_map(){
     m["tag18"] = 18;
     m["tag19"] = 19;
     m["tag20"] = 20;
+    m["tag21"] = 21;
+    m["tag22"] = 22;
+    m["tag23"] = 23;
+    m["tag24"] = 24;
+    m["tag25"] = 25;
+    m["tag26"] = 26;
+    m["tag27"] = 27;
+    m["tag28"] = 28;
 
     return m;
 }
@@ -53,53 +62,67 @@ tf2::Transform lookupTagTransform(int id){
     if(!std::strcmp(colour.c_str(), "orange")){
     // Note: z-axis of tag is coming out of the page, y-axis points to the top
         switch(id){
-            case  0:  r.setValue(-0.044, 0.040, 0.310); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-            case  1:  r.setValue(-0.044, 0.040, 0.230); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-            case  2:  r.setValue(-0.044, 0.040, 0.150); ex = 1.57; ey = 0.00; ez = 1.57; break;
-            case  3:  r.setValue(-0.084, 0.080, 0.310); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case  4:  r.setValue(-0.084, 0.080, 0.230); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case  5:  r.setValue(-0.084, 0.080, 0.150); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case  6:  r.setValue(3.084, 1.030, 0.310); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case  7:  r.setValue(3.084, 1.030, 0.230); ex = 1.57; ey = 0.00; ez = 3.14; break;
-            case  8:  r.setValue(3.084, 1.030, 0.150); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case  9:  r.setValue(3.044, 0.990, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-            case 10:  r.setValue(3.044, 0.990, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-            case 11:  r.setValue(3.044, 0.990, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-            case 12:  r.setValue(3.084, 0.950, 0.310); ex = 1.57; ey = 0.00; ez = 0.00; break;
-            case 13:  r.setValue(3.084, 0.950, 0.230); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            case 14:  r.setValue(3.084, 0.950, 0.150); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            case 15:  r.setValue(-0.084, 1.900, 0.310); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            case 16:  r.setValue(-0.084, 1.900, 0.230); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            case 17:  r.setValue(-0.084, 1.900, 0.150); ex = 1.57; ey = 0.00; ez = 0.00; break;
-            case 18:  r.setValue(-0.044, 1.940, 0.310); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-            case 19:  r.setValue(-0.044, 1.940, 0.230); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-            case 20:  r.setValue(-0.044, 1.940, 0.150); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-            default: r.setValue(0.00, 0.00, 0.00); ex = 0.00; ey = 0.00; ez = 0.00; break; 
+            case  0: r.setValue(-0.0440, 0.0475, 0.3675); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case  1: r.setValue(-0.0440, 0.0475, 0.4625); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case  2: r.setValue(-0.0440, 0.0475, 0.2725); ex = 1.571; ey = 0.000; ez = 1.571; break;
+            case  3: r.setValue(-0.0440, 0.0475, 0.1775); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case  4: r.setValue(-0.0915, 0.0950, 0.4625); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case  5: r.setValue(-0.0915, 0.0950, 0.3675); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case  6: r.setValue(-0.0915, 0.0950, 0.2725); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case  7: r.setValue(-0.0915, 0.0950, 0.1775); ex = 1.571; ey = 0.000; ez = 3.142; break;
+            case  8: r.setValue( 3.0915, 1.0450, 0.4625); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case  9: r.setValue( 3.0915, 1.0450, 0.3675); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case 10: r.setValue( 3.0915, 1.0450, 0.2725); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case 11: r.setValue( 3.0915, 1.0450, 0.1775); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case 12: r.setValue( 3.0440, 0.9975, 0.4625); ex = 1.571; ey = 0.000; ez =-1.571; break;
+            case 13: r.setValue( 3.0440, 0.9975, 0.3675); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case 14: r.setValue( 3.0440, 0.9975, 0.2725); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case 15: r.setValue( 3.0440, 0.9975, 0.1775); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case 16: r.setValue( 3.0915, 0.9500, 0.4625); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 17: r.setValue( 3.0915, 0.9500, 0.3675); ex = 1.571; ey = 0.000; ez = 0.000; break;
+            case 18: r.setValue( 3.0915, 0.9500, 0.2725); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 19: r.setValue( 3.0915, 0.9500, 0.1775); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 20: r.setValue(-0.0915, 1.9000, 0.4625); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 21: r.setValue(-0.0915, 1.9000, 0.3675); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 22: r.setValue(-0.0915, 1.9000, 0.2725); ex = 1.571; ey = 0.000; ez = 0.000; break;
+            case 23: r.setValue(-0.0915, 1.9000, 0.1775); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 24: r.setValue(-0.0440, 1.9475, 0.4625); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case 25: r.setValue(-0.0440, 1.9475, 0.3675); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case 26: r.setValue(-0.0440, 1.9475, 0.2725); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case 27: r.setValue(-0.0440, 1.9475, 0.1775); ex = 1.571; ey = 0.000; ez = 1.571; break;
+            default: r.setValue(0.000, 0.000, 0.000); ex = 0.000; ey = 0.000; ez = 0.000; break; 
         }
     } else {
         switch(id){
-            case  0:  r.setValue(3.084, 0.080, 0.310); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case  1:  r.setValue(3.084, 0.080, 0.230); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case  2:  r.setValue(3.084, 0.080, 0.150); ex = 1.57; ey = 0.00; ez = 3.14; break;
-            case  3:  r.setValue(3.044, 0.040, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-            case  4:  r.setValue(3.044, 0.040, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-            case  5:  r.setValue(3.044, 0.040, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-            case  6:  r.setValue(-0.084, 0.950, 0.310); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            case  7:  r.setValue(-0.084, 0.950, 0.230); ex = 1.57; ey = 0.00; ez = 0.00; break;
-            case  8:  r.setValue(-0.084, 0.950, 0.150); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            case  9:  r.setValue(-0.044, 0.990, 0.310); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-            case 10:  r.setValue(-0.044, 0.990, 0.230); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-            case 11:  r.setValue(-0.044, 0.990, 0.150); ex = 1.57; ey = 0.00; ez = 1.57; break; 
-            case 12:  r.setValue(-0.084, 1.030, 0.310); ex = 1.57; ey = 0.00; ez = 3.14; break;
-            case 13:  r.setValue(-0.084, 1.030, 0.230); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case 14:  r.setValue(-0.084, 1.030, 0.150); ex = 1.57; ey = 0.00; ez = 3.14; break; 
-            case 15:  r.setValue(3.044, 1.940, 0.310); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-            case 16:  r.setValue(3.044, 1.940, 0.230); ex = 1.57; ey = 0.00; ez = -1.57; break; 
-            case 17:  r.setValue(3.044, 1.940, 0.150); ex = 1.57; ey = 0.00; ez = -1.57; break;
-            case 18:  r.setValue(3.084, 1.900, 0.310); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            case 19:  r.setValue(3.084, 1.900, 0.230); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            case 20:  r.setValue(3.084, 1.900, 0.150); ex = 1.57; ey = 0.00; ez = 0.00; break; 
-            default: r.setValue(0.00, 0.00, 0.00); ex = 0.00; ey = 0.00; ez = 0.00; break; 
+            case  0:  r.setValue( 3.0915, 0.0950, 0.3675); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case  1:  r.setValue( 3.0915, 0.0950, 0.4625); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case  2:  r.setValue( 3.0915, 0.0950, 0.2725); ex = 1.571; ey = 0.000; ez = 3.142; break;
+            case  3:  r.setValue( 3.0915, 0.0950, 0.1775); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case  4:  r.setValue( 3.0440, 0.0475, 0.4625); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case  5:  r.setValue( 3.0440, 0.0475, 0.3675); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case  6:  r.setValue( 3.0440, 0.0475, 0.2725); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case  7:  r.setValue( 3.0440, 0.0475, 0.1775); ex = 1.571; ey = 0.000; ez =-1.571; break;
+            case  8:  r.setValue(-0.0915, 0.9500, 0.4625); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case  9:  r.setValue(-0.0915, 0.9500, 0.3675); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 10:  r.setValue(-0.0915, 0.9500, 0.2725); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 11:  r.setValue(-0.0915, 0.9500, 0.1775); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 12:  r.setValue(-0.0440, 0.9975, 0.4625); ex = 1.571; ey = 0.000; ez = 1.571; break;
+            case 13:  r.setValue(-0.0440, 0.9975, 0.3675); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case 14:  r.setValue(-0.0440, 0.9975, 0.2725); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case 15:  r.setValue(-0.0440, 0.9975, 0.1775); ex = 1.571; ey = 0.000; ez = 1.571; break; 
+            case 16:  r.setValue(-0.0915, 1.0450, 0.4625); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case 17:  r.setValue(-0.0915, 1.0450, 0.3675); ex = 1.571; ey = 0.000; ez = 3.142; break;
+            case 18:  r.setValue(-0.0915, 1.0450, 0.2725); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case 19:  r.setValue(-0.0915, 1.0450, 0.1775); ex = 1.571; ey = 0.000; ez = 3.142; break; 
+            case 20:  r.setValue( 3.0440, 1.9475, 0.4625); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case 21:  r.setValue( 3.0440, 1.9475, 0.3675); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case 22:  r.setValue( 3.0440, 1.9475, 0.2725); ex = 1.571; ey = 0.000; ez =-1.571; break;
+            case 23:  r.setValue( 3.0440, 1.9475, 0.1775); ex = 1.571; ey = 0.000; ez =-1.571; break; 
+            case 24:  r.setValue( 3.0915, 1.9000, 0.4625); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 25:  r.setValue( 3.0915, 1.9000, 0.3675); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 26:  r.setValue( 3.0915, 1.9000, 0.2725); ex = 1.571; ey = 0.000; ez = 0.000; break; 
+            case 27:  r.setValue( 3.0915, 1.9000, 0.1775); ex = 1.571; ey = 0.000; ez = 0.000; break;
+            default: r.setValue(0.000, 0.000, 0.000); ex = 0.000; ey = 0.000; ez = 0.000; break; 
         }
     }
     q.setRPY(ex,ey,ez);
@@ -107,10 +130,18 @@ tf2::Transform lookupTagTransform(int id){
     return tf2::Transform(q,r);
 }
 
+void meanCallback(const geometry_msgs::TransformStamped::ConstPtr &data){
+    static tf2_ros::TransformBroadcaster br;      
+    br.sendTransform(*data);
+}
+
+
 int main(int argc, char **argv){
 
     ros::init(argc, argv, "eurobot_tf_broadcaster");
     ros::NodeHandle nh;
+
+    ros::Subscriber sub = nh.subscribe("/eurobot/state/kalman_mean", 10, meanCallback);
 
     static tf2_ros::StaticTransformBroadcaster static_bc;
     auto name_map = init_map();
