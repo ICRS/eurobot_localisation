@@ -156,17 +156,22 @@ public:
             T_CT.setOrigin(r_CT);
             T_CT.setRotation(q_CT);
             
-            if(id <= 20 && id >= 0){    
+            if(id <= 27 && id >= 0){    
                 // if beacon tag detected
                 // Calculate T_WB = T_WT * T_TC * T_CB
                 tf2::Transform T_TC = T_CT.inverse();
                 tf2::Transform T_WT = eurobot::params::lookupTagTransform(id);
                 T_res = T_WT * T_TC * eurobot::params::T_CB;
-            
+                
+                
+                // if(T_res.getOrigin().distance(T_WT.getOrigin()) > 2.00) continue;
+
+
+
                 // set the proper links for the result
                 temp.header.frame_id = "world";
                 temp.child_frame_id = "base_tag" + std::to_string(id) + "(" + cam_name + ")";
-            } else if(id > 20 && id < 25) {
+            } else if(id > 27 && id < 32) {
                 // if enemy tag detected
                 tf2::Transform T_TE = eurobot::params::lookupEnemyTransform(id);
 
@@ -195,10 +200,10 @@ public:
             temp.transform.rotation.w = q_res.w();
 
 
-            if(id <= 20 && id >= 0){
+            if(id <= 27 && id >= 0){
                 self_pos.transforms.push_back(temp);
                 br.sendTransform(temp);
-            } else if(id > 20 && id < 25){
+            } else if(id > 27 && id < 32){
                 enemy_pos.transforms.push_back(temp);
             }
 

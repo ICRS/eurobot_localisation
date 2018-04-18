@@ -1,18 +1,21 @@
 <launch>
   <!-- Set this to your camera's name -->
-  <arg name="camera_one"        default="jetson_cam" />
-  <arg name="camera_one_info"   default="file:///home/nvidia/.camera_info/jetson_cam_1280x720.yaml" />
-  <arg name="camera_two"        default="logitech_cam" />
-  <arg name="camera_two_info"   default="file:///home/nvidia/.camera_info/logitech_cam_640x480.yaml" />
-  <arg name="camera_three"      default="microsoft_cam" />
-  <arg name="camera_three_info" default="file:///home/nvidia/.camera_info/microsoft_cam_640x480.yaml" />
+  <arg name="camera_one"        value="jetson_cam" />
+  <arg name="camera_one_info"   value="file:///home/nvidia/.camera_info/jetson_cam_1280x720.yaml" />
+  <arg name="camera_two"        value="logitech_cam" />
+  <arg name="camera_two_info"   value="file:///home/nvidia/.camera_info/logitech_cam_640x480.yaml" />
+  <arg name="camera_three"      value="microsoft_cam" />
+  <arg name="camera_three_info" value="file:///home/nvidia/.camera_info/microsoft_cam_640x480.yaml" />
+  <arg name="camera_four"       value="sony_cam" />
+  <arg name="camera_four_info"  value="file:///home/nvidia/.camera_info/sony_cam_640x480.yaml" />
 
   <arg name="microsoft_path"    default="/dev/video2"/>
   <arg name="logitech_path"     default="/dev/video1"/>
+  <arg name="sony_path"         default="/dev/video3"/>
 
   <arg name="gui"               default="true"/>
   <arg name="feed"              default="true"/>
-  <arg name="rate"              default="20.0"/>
+  
   <arg name="side"              default="orange"/>
   <arg name="orange"            default="true"/>
 
@@ -34,7 +37,6 @@
       <param name="frame_id"        value="$(arg camera_two)" />
       <param name="image_width"     value="640" />
       <param name="image_height"    value="480" />
-      <param name="rate"            value="$(arg rate)"/>
       <param name="camera_info_url" value="$(arg camera_two_info)" />
 
       <remap from="$(arg camera_two)_driver_node/image_raw" to="$(arg camera_two)/image_raw" />
@@ -46,17 +48,27 @@
       <param name="frame_id"        value="$(arg camera_three)" />
       <param name="image_width"     value="640" />
       <param name="image_height"    value="480" />
-      <param name="rate"            value="$(arg rate)"/>
       <param name="camera_info_url" value="$(arg camera_three_info)" />
 
       <remap from="$(arg camera_three)_driver_node/image_raw" to="$(arg camera_three)/image_raw" />
   </node>
 
+  <!-- Camera driver for secondary Microsoft camera -->
+  <node pkg="cv_camera" type="cv_camera_node" name="$(arg camera_four)_driver_node">
+      <param name="device_path"     value="$(arg sony_path)" />
+      <param name="frame_id"        value="$(arg camera_four)" />
+      <param name="image_width"     value="640" />
+      <param name="image_height"    value="480" />
+      <param name="camera_info_url" value="$(arg camera_four_info)" />
+
+      <remap from="$(arg camera_four)_driver_node/image_raw" to="$(arg camera_four)/image_raw" />
+  </node>
 
   <!-- Display raw & recitfied image feeds from camera drivers -->
   <node ns="$(arg camera_one)"   pkg="image_proc" type="image_proc" name="image_rectifier_node" />
   <node ns="$(arg camera_two)"   pkg="image_proc" type="image_proc" name="image_rectifier_node" />
   <node ns="$(arg camera_three)" pkg="image_proc" type="image_proc" name="image_rectifier_node" />
+  <node ns="$(arg camera_four)"  pkg="image_proc" type="image_proc" name="image_rectifier_node" />
 
   <!-- <node pkg="image_view" type="image_view" name="primary_raw_feed" >   --> 
   <!--   <remap from="image" to="/$(arg camera_one)/image_raw" />          --> 
@@ -87,11 +99,13 @@
   <!-- Apriltags2_ros for multiple cameras -->
   <arg name="launch_prefix" default="" /> 
   <arg name="camera_1_node_namespace" default="$(arg camera_one)/apriltags_node" />
-  <arg name="camera_1_frame" default="$(arg camera_one)" />
+  <arg name="camera_1_frame"          default="$(arg camera_one)" />
   <arg name="camera_2_node_namespace" default="$(arg camera_two)/apriltags_node" />
-  <arg name="camera_2_frame" default="$(arg camera_two)" />
+  <arg name="camera_2_frame"          default="$(arg camera_two)" />
   <arg name="camera_3_node_namespace" default="$(arg camera_three)/apriltags_node" />
-  <arg name="camera_3_frame" default="$(arg camera_three)" />
+  <arg name="camera_3_frame"          default="$(arg camera_three)" />
+  <arg name="camera_4_node_namespace" default="$(arg camera_four)/apriltags_node" />
+  <arg name="camera_4_frame"          default="$(arg camera_four)" />
 
   <rosparam command="load" file="$(find eurobot_localisation)/config/settings.yaml" ns="$(arg camera_1_node_namespace)" />
   <rosparam command="load" file="$(find eurobot_localisation)/config/tags.yaml"     ns="$(arg camera_1_node_namespace)" />
@@ -99,6 +113,8 @@
   <rosparam command="load" file="$(find eurobot_localisation)/config/tags.yaml"     ns="$(arg camera_2_node_namespace)" />
   <rosparam command="load" file="$(find eurobot_localisation)/config/settings.yaml" ns="$(arg camera_3_node_namespace)" />
   <rosparam command="load" file="$(find eurobot_localisation)/config/tags.yaml"     ns="$(arg camera_3_node_namespace)" />
+  <rosparam command="load" file="$(find eurobot_localisation)/config/settings.yaml" ns="$(arg camera_4_node_namespace)" />
+  <rosparam command="load" file="$(find eurobot_localisation)/config/tags.yaml"     ns="$(arg camera_4_node_namespace)" />
   
   <node ns="$(arg camera_one)" pkg="apriltags2_ros" type="apriltags2_ros_continuous_node" name="apriltags_node" clear_params="true" output="screen" launch-prefix="$(arg launch_prefix)" >
     <param name="camera_frame" type="str" value="$(arg camera_1_frame)" />
@@ -115,6 +131,10 @@
     <param name="publish_tag_detections_image" type="bool" value="true" />      
   </node>
 
+  <node ns="$(arg camera_four)" pkg="apriltags2_ros" type="apriltags2_ros_continuous_node" name="apriltags_node" clear_params="true" output="screen" launch-prefix="$(arg launch_prefix)" >
+    <param name="camera_frame" type="str" value="$(arg camera_4_frame)" />
+    <param name="publish_tag_detections_image" type="bool" value="true" />      
+  </node>
 
   <!-- Display tags detected from both cameras -->
   <node if="$(arg feed)" ns="$(arg camera_one)" pkg="image_view" type="image_view" name="tag_detection_feed" >     
@@ -129,6 +149,9 @@
     <remap from="image" to="/$(arg camera_three)/tag_detections_image" />       
   </node>        
 
+  <node if="$(arg feed)" ns="$(arg camera_four)" pkg="image_view" type="image_view" name="tag_detection_feed" >     
+    <remap from="image" to="/$(arg camera_four)/tag_detections_image" />       
+  </node>        
 
     
   <!-- Run localisation module for each camera feed -->
@@ -137,9 +160,9 @@
     <param name="colour" type="str"    value="$(arg side)" />
 
     <!-- values for camera pose relative to robot base -->
-    <param name="rx"     type="double" value="-0.050" />  <!-- value="0.075" />  -->   
-    <param name="ry"     type="double" value="0.050" />  <!-- value="-0.015" /> -->   
-    <param name="rz"     type="double" value="0.210" />  <!-- value="0.175" />  -->   
+    <param name="rx"     type="double" value="-0.060" />  <!-- value="0.075" />  -->   
+    <param name="ry"     type="double" value="0.040" />  <!-- value="-0.015" /> -->   
+    <param name="rz"     type="double" value="0.214" />  <!-- value="0.175" />  -->   
     
     <param name="roll"   type="double" value="0.000" />  <!-- value="-1.57" />  -->   
     <param name="pitch"  type="double" value="1.571" />  <!-- value="0.00" />   -->   
@@ -151,13 +174,13 @@
     <param name="colour" type="str"    value="$(arg side)" />
 
     <!-- values for camera pose relative to robot base -->
-    <param name="rx"     type="double"  value="0.150"/>  <!-- value="0.05" /> -->  
-    <param name="ry"     type="double"  value="0.035"/>  <!-- value="0.00" /> -->  
-    <param name="rz"     type="double"  value="0.295"/>  <!-- value="0.30" /> -->  
+    <param name="rx"     type="double"  value="0.090"/>  <!-- value="0.05" /> -->  
+    <param name="ry"     type="double"  value="0.010"/>  <!-- value="0.00" /> -->  
+    <param name="rz"     type="double"  value="0.250"/>  <!-- value="0.30" /> -->  
     
     <param name="roll"   type="double"  value="0.000"/>  <!-- value="-1.57" />-->   
-    <param name="pitch"  type="double"  value="-1.571"/>  <!-- value="0.00" /> -->  
-    <param name="yaw"    type="double"  value="3.142"/>  <!-- value="-1.57" />-->   
+    <param name="pitch"  type="double"  value="1.571"/>  <!-- value="0.00" /> -->  
+    <param name="yaw"    type="double"  value="0.000"/>  <!-- value="-1.57" />-->   
   </node>
 
   <node ns="$(arg camera_three)" pkg="eurobot_localisation" type="localisation_module" name="localisation_node" >
@@ -166,8 +189,8 @@
 
     <!-- values for camera pose relative to robot base -->
     <param name="rx"     type="double"  value="0.000"/>  <!-- value="0.05" /> -->  
-    <param name="ry"     type="double"  value="-0.148"/>  <!-- value="0.00" /> -->  
-    <param name="rz"     type="double"  value="0.137"/>  <!-- value="0.30" /> -->  
+    <param name="ry"     type="double"  value="-0.0155"/>  <!-- value="0.00" /> -->  
+    <param name="rz"     type="double"  value="0.0120"/>  <!-- value="0.30" /> -->  
     
     <param name="roll"   type="double"  value="-1.571"/>  <!-- value="-1.57" />-->   
     <param name="pitch"  type="double"  value="0.000"/>  <!-- value="0.00" /> -->  
@@ -175,6 +198,20 @@
   
   </node>
 
+  <node ns="$(arg camera_four)" pkg="eurobot_localisation" type="localisation_module" name="localisation_node" >
+    <param name="name"   type="str"    value="$(arg camera_four)" />
+    <param name="colour" type="str"    value="$(arg side)" />
+
+    <!-- values for camera pose relative to robot base -->
+    <param name="rx"     type="double"  value="0.000"/>  <!-- value="0.05" /> -->  
+    <param name="ry"     type="double"  value="-0.0155"/>  <!-- value="0.00" /> -->  
+    <param name="rz"     type="double"  value="0.0120"/>  <!-- value="0.30" /> -->  
+    
+    <param name="roll"   type="double"  value="-1.571"/>  <!-- value="-1.57" />-->   
+    <param name="pitch"  type="double"  value="0.000"/>  <!-- value="0.00" /> -->  
+    <param name="yaw"    type="double"  value="-1.571"/>  <!-- value="-1.57" />-->   
+  
+  </node>
 
   <!-- Display on Rviz for testing purposes -->
   <node pkg="eurobot_localisation" type="eurobot_tf_broadcaster_node" name="eurobot_arena_tf_generator" >
